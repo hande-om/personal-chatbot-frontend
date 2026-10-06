@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 interface Message {
   sender: 'user' | 'bot';
@@ -22,8 +23,6 @@ export class ChatbotComponent {
   ];
   loading: boolean = false;
 
-  private apiUrl = 'http://localhost:8000/chat';
-
   constructor(private http: HttpClient) {}
 
   sendMessage() {
@@ -35,7 +34,7 @@ export class ChatbotComponent {
     this.loading = true;
 
     // Send payload to FastAPI
-    this.http.post<{ answer: string }>(this.apiUrl, { message: userMessage })
+    this.http.post<{ answer: string }>(`${environment.apiUrl}/chat`, { message: userMessage })
       .subscribe({
         next: (response) => {
           this.messages.push({ sender: 'bot', text: response.answer });
